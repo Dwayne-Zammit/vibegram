@@ -3,9 +3,6 @@ from flask import Flask
 from flask_login import LoginManager
 from flask_socketio import SocketIO
 from models import db, User
-from waitress import serve
-import eventlet
-from eventlet import wsgi
 
 current_directory = os.path.dirname(os.path.realpath(__file__))
 parent_directory = os.path.dirname(current_directory)
