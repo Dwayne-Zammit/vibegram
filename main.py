@@ -3,6 +3,8 @@ from flask import Flask
 from flask_login import LoginManager
 from flask_socketio import SocketIO
 from models import db, User
+import eventlet
+from eventlet import wsgi
 
 current_directory = os.path.dirname(os.path.realpath(__file__))
 parent_directory = os.path.dirname(current_directory)
@@ -51,4 +53,4 @@ app.register_blueprint(vibegram_related_routes)
 socketio_bp(socketio)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    wsgi.server(eventlet.listen(('0.0.0.0', 5000)), app)

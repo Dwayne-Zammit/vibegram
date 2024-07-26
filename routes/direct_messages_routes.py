@@ -1,5 +1,3 @@
-import os
-import sys
 from flask import Blueprint
 from flask_login import login_required
 from flask_socketio import join_room, leave_room
