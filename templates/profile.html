@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VibeGram | Profile</title>
+  <style>
+    /* Existing styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    /* Header Styles */
+    .top_nav {
+      background-color: #fff;
+      border-bottom: 1px solid #ddd;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    nav ul {
+      display: flex;
+    }
+    nav ul li {
+      margin-right: 15px;
+    }
+    nav ul li a:hover {
+      text-decoration: underline;
+    }
+    ul li a {
+      display: block;
+    }
+    header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      background-color: #f8f8f8;
+      border-bottom: 1px solid #dbdbdb;
+    }
+    .profile-info {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .profile-picture {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 20px;
+    }
+    .profile-picture:hover {
+      opacity: 70%;
+      cursor: pointer;
+    }
+    .username-stats {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .username {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .stats {
+      display: flex;
+      gap: 3%;
+      width:120%
+    }
+    .bio {
+      text-align: center;
+      font-size: 16px;
+    }
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5px;
+      padding: 20px;
+      max-width: 60%;
+      margin-left: 17%;
+    }
+    .image-upload {
+      display: inline-block;
+      padding: 8px 16px;
+      background-color: black;
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      font-size: 12px;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      /* margin-left:0.5%; */
+      /* position:fixed; */
+    }
+    .image-upload:hover {
+      opacity: 70%;
+      background-color: grey;
+    }
+    .grid-item {
+      width: 100%;
+      height: 100%;
+      padding: 1em;
+      position: relative;
+      object-fit: cover;
+    }
+    .grid-item:hover {
+      opacity: 70%;
+      cursor: pointer;
+    }
+    .grid-item img {
+      max-height: 100%;
+    }
+    ul {
+      list-style-type: none;
+    }
+    /* Footer Styles */
+    footer {
+      background-color: #fff;
+      border-top: 1px solid #ddd;
+      text-align: center;
+      margin-top: 20px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgb(0,0,0);
+      background-color: rgba(0,0,0,0.4);
+      padding-top: 60px;
+    }
+    .modal-content {
+      background-color: #fefefe;
+      margin: 5% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 40%;
+    }
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .followerInfoContainer {
+      display: flex;
+      flex-direction: row;
+      padding: 1%;
+    }
+
+    .followers-count:hover{
+      cursor: pointer;
+      opacity: 40%;
+    }
+
+    .following-count:hover{
+      cursor: pointer;
+      opacity: 40%;
+    }
+    a {
+      text-decoration: none;
+    }
+    .username_in_follow_modal:hover{
+      cursor:pointer;
+    }
+
+    @media (max-width: 1356px) {
+    .modal-content {
+        width: 70%;
+    }
+    .grid-container {
+        max-width: 100%;
+        margin-left: 0%;
+        margin-right:6%;
+    }
+}
+  </style>
+</head>
+<body>
+<div class="top_nav">
+    <a href="/home">
+        <img src="static/images/logo.png" alt="Home" style="width: 120px; height: 60px;">
+    </a>
+	<!-- <nav>
+		<ul>
+			<li><a href="/home">Home</a></li>
+			<li><a href="#">Explore</a></li>
+			<li><a href="/profile">Profile</a></li>
+			<li><a href="#">Settings</a></li>
+      <li><a href="/logout">Logout</a></li>
+		</ul>
+	</nav> -->
+</div>
+  <header>
+    <div class="profile-info">
+      <label for="image-upload" class="custom-image-upload">
+        <img class="profile-picture" src="{{image}}" alt="Profile Picture">
+      </label>
+      <div class="upload">
+        <form class="upload-form" action="{{ url_for('vibegram_related_routes.upload_profile_picture') }}" method="POST" enctype="multipart/form-data">
+          <input type="file" name="image" id="image-upload" accept="image/*" required style="display:none;">
+          <button type="submit" style="display:none;">Upload Image</button>
+        </form>
+      </div>
+      <div class="username-stats">
+        <h2 id="post_username" class="username">{{username}}</h2>
+        <div class="stats">
+          <span class="posts-count">{{ posts }}</span>
+          <span class="followers-count" onclick="openModal('followersModal')">{{ followers }}</span>
+          <span class="following-count" onclick="openModal('followingModal')">{{ following }}</span>
+        </div>
+      </div>
+    </div>
+    <form class="upload-form" id="upload-form" method="POST" enctype="multipart/form-data">
+      <div class="bio">
+        <p id="bio" onclick="toggleEditMode()">{{bio}}</p>
+        <input id="bio-input" name="bio" type="text" value="{{bio}}" style="display: none;" onblur="toggleViewMode()" onkeydown="handleKeyPress(event)">
+      </div>
+    </form>
+  </header>
+  <div class="post-upload">
+    <label for="image-upload-posts" class="image-upload">New Post</label>
+    <div class="upload-post">
+      <form class="upload-form" action="{{ url_for('vibegram_related_routes.upload_post') }}" method="POST" enctype="multipart/form-data">
+        <input type="file" name="image" id="image-upload-posts" accept="image/*" required style="display:none;">
+        <button type="submit" style="display:none;">Upload Image</button>
+      </form>
+    </div>
+  </div>
+  <main>
+    <div class="grid-container">
+      {% for image_filename in posts_images %}
+      <img id="post_image" class="grid-item" src="/static/posts/{{ image_filename }}" alt="Post" onclick="viewPhoto('{{image_filename}}')">
+      {% endfor %}
+    </div>
+  </main>
+
+  <!-- Modals for Followers and Following -->
+  <div id="followersModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('followersModal')">&times;</span>
+      <h2>Followers</h2>
+      {% for follower_info in followers_information %}
+      <div class="followerInfoContainer">
+          <div class="followerPictureContainer">
+          <a class="profile-picture" href="{{ url_for('vibegram_related_routes.home_search_bar_search_profile', profile_username=follower_info.username) }}" style="border: none;">
+            <img class="profile-picture" src="{{ url_for('static', filename='profile_pictures/' ~ follower_info.profile_picture) }}" alt="Profile Picture">
+          </div>
+          <p style="color:black; text-decoration:none">{{ follower_info.username }}</p>
+        </a>
+      </div>
+      {% endfor %}    
+    </div>
+  </div>
+  <div id="followingModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('followingModal')">&times;</span>
+      <h2>Following</h2>
+      <ul class="followers-list">
+        {% for user_info in following_information %}
+          <div class="followerInfoContainer">
+            <div class="followerPictureContainer">
+              <a class="profile-picture" href="{{ url_for('vibegram_related_routes.home_search_bar_search_profile', profile_username=user_info.is_following) }}" style="border: none;">
+              <img class="profile-picture" src="static\profile_pictures\{{user_info.profile_picture}}" alt="Profile Picture">
+            </div>
+            
+            <p class="username_in_follow_modal">{{ user_info.is_following }}</p>
+            </div>
+          </a>
+        {% endfor %}
+    </ul>
+    </div>
+  </div>
+  </div>
+
+  <footer>
+    <p>Copyright &copy; VibeGram</p>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var imageUpload = document.getElementById('image-upload');
+      imageUpload.addEventListener('change', function() {
+        this.form.submit();
+      });
+
+      var imageUploadPosts = document.getElementById('image-upload-posts');
+      imageUploadPosts.addEventListener('change', function() {
+        this.form.submit();
+      });
+    });
+
+    function toggleEditMode() {
+      const bioParagraph = document.getElementById('bio');
+      const bioInput = document.getElementById('bio-input');
+      
+      bioParagraph.style.display = 'none';
+      bioInput.style.display = 'inline';
+      bioInput.focus();   
+    }
+
+    function toggleViewMode() {
+      const bioParagraph = document.getElementById('bio');
+      const bioInput = document.getElementById('bio-input');
+      const form = document.getElementById('upload-form');
+      if (bioInput.value.trim() === "") {
+        alert("Bio cannot be empty");
+        bioInput.focus();
+        return;
+      }
+
+      bioInput.style.display = 'none';
+      bioParagraph.innerText = bioInput.value;
+      bioParagraph.style.display = 'inline';
+
+      updateFormActionAndSubmit(bioInput.value);
+    }
+
+    function updateFormActionAndSubmit(newBio) {
+      const form = document.getElementById('upload-form');
+      form.action = "/change_bio/" + encodeURIComponent(newBio);
+      form.submit();
+    }
+
+    function handleKeyPress(event) {
+      if (event.key === 'Enter') {
+        toggleViewMode();
+      }
+    }
+
+    function viewPhoto(imageName) {
+      const username = document.getElementById('post_username').textContent;
+      const url = '/edit_post/username_image_name=' + encodeURIComponent(username) + ',' + encodeURIComponent(imageName);
+      window.location = url;
+    }
+
+    function openModal(modalId) {
+      document.getElementById(modalId).style.display = "block";
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = "none";
+    }
+  </script>
+</body>
+</html>

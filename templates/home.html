@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VibeGram</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+        }
+        h1, h2 {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        a {
+            text-decoration: none;
+            color: #3897f0;
+        }
+        ul {
+            list-style: none;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            align-items: center;
+        }
+        /* Header Styles */
+        header {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #fff;
+            border-right: 1px solid #ddd;
+            padding: 10px;
+            position: fixed;
+            width: 340px;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            height:100%;
+        }
+        nav ul {
+            display: flex;
+            flex-direction: column;
+        }
+        nav ul li {
+            margin-bottom: 25px;
+        }
+        nav ul li a:hover {
+            text-decoration: underline;
+        }
+        /* Main Content Styles */
+        main {
+            /* margin-left: 8%; Adjusted to match the header width */
+            width: calc(100% - 1%);
+            padding: 1%;
+        }
+        /* Stories Styles */
+        .stories {
+            padding: 10px;
+            width: 55%;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 1%;
+        }
+        .stories h2 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .stories ul {
+            display: flex;
+        }
+        .stories ul li {
+            margin-right: 10px;
+        }
+        .stories ul li:last-child {
+            margin-right: 0;
+        }
+        .stories ul li a {
+            display: block;
+            border: 2px solid #3897f0;
+            border-radius: 50%;
+            overflow: hidden;
+            width: 60px;
+            height: 60px;
+        }
+        .stories ul li a img {
+            width: 100%;
+            height: 100%;
+        }
+        /* Posts Styles */
+        .posts {
+            padding: 10px;
+            width: 30%;
+        }
+        .posts h2 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .posts ul li {
+            margin-bottom: 20px;
+        }
+        .posts ul li a {
+            display: block;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .posts ul li a img {
+            width: 100%;
+            height: 100%;
+        }
+        .posts ul li a p {
+            padding: 10px;
+            font-size: 14px;
+        }
+        .posts {
+            max-width: 50%;
+            margin: auto;
+        }
+        /* Footer Styles */
+        footer {
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            margin-top: 20px;
+            width: 100%;
+        }
+        .search-button {
+            background-color: white ;
+            border: none;
+            color: white;
+            padding: 3px 5px;
+            margin-left: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .search-button:hover {
+            /* background-color: grey; */
+            opacity: 40%;
+            color: black;
+        }
+        .grid-item {
+            object-fit: cover;
+            display: block;
+            justify-content: center;
+        }
+        .grid-item:hover {
+            cursor: pointer;
+            opacity: 80%;
+        }
+        .profile-picture {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+        .profile-picture:hover {
+            cursor: pointer;
+            opacity: 90%;
+        }
+        .prof-pic-username {
+            display: flex;
+            font-family: Arial, Helvetica, sans-serif;
+            cursor: pointer;
+        }
+        .prof-pic-username:hover {
+            cursor: pointer;
+        }
+        .post-username {
+            margin-top: 2%;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .add_story {
+            position: relative;
+            display: inline-block;
+        }
+        .plus-sign {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background-color: #0096f6;
+            color: white;
+            font-size: 14px;
+            padding: 4px;
+            border-radius: 50%;
+            cursor: pointer;
+            margin-right: 28%;
+            margin-bottom: 20%;
+        }
+        .prof_pic_storie {
+            display: block;
+        }
+        .storie-username {
+            margin-top: 5%;
+            font-size: 12px;
+            margin-left: 5%;
+        }
+        .navbar {
+            display: flex;
+            flex-direction: column;
+        }
+        .navbarBodyContainer {
+            width: 25px;
+        }
+        .navbarIcon {
+            width: 20px;
+            height: 20px;
+            margin-left: 15px;
+        }
+        .navbarIconProfilePic {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-left: 15px;
+        }
+        a {
+            margin-right: 15px;
+        }
+        .storiesContainer {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            /* position: fixed; */
+        }
+        .lineBreak {
+            width: 100%;
+            border-top: 1px solid #ddd;
+            margin-top: 2%;
+            margin-bottom: 2%;
+        }
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            right:24%;
+            bottom: 30%;
+            width: 100%;
+            height: 100%;
+            /* background-color: rgba(0, 0, 0, 0.1); */
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 20%;
+            height:100%;
+            /* background-color: rgba(0, 0, 0, 0.1); */
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .search-results{
+            margin-top: 10%;
+        }
+        .result-item {
+            display: flex;
+            flex-direction: row;
+        }
+        .usernameSearchResults {
+            margin-bottom: 3%;
+            margin-left: 1%;
+        }
+            /* Media query for smaller screens */
+    @media (max-width: 1356px) {
+        header {
+            display: none;
+            width:50%;
+        }
+
+        body {
+
+            width: 0%;
+            /* margin-top:10%; */
+        }
+
+        main {
+            width: 1%;
+        }
+
+        .show-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 10%;
+            text-align: center;
+            padding: 1%;
+            cursor: pointer;
+            background-color: white;
+            z-index: 1;
+        }
+        .show-header:hover {
+            background-color: grey;
+        }
+
+        .grid-item {
+            width:50%;
+        }
+        .modal{
+            /* bottom:10%; */
+            bottom:6%;
+            height:103vh;
+            left: 25%;
+        }
+        .modal-content{
+            width: 70%;
+            padding-top:25%;
+            /* bottom:30%; */
+        }
+        h4{
+            margin-top:3vh;
+        }
+    }
+
+</style>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var showHeader = document.querySelector('.show-header');
+        var header = document.querySelector('header');
+
+        showHeader.addEventListener('click', function() {
+            if (header.style.display === 'none' || header.style.display === '') {
+                header.style.display = 'block';
+            } else {
+                header.style.display = 'none';
+            }
+        });
+    });
+</script>
+<script>
+    function auto_complete_users() {
+        const filter = document.getElementById("search_username").value;
+        if (filter.length == 0) {
+            document.getElementById("search-results").innerHTML = '';
+            return;
+        }
+        const url = '/autoCompleteUsersSearch/' + encodeURIComponent(filter);
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                updateSearchResults(data);
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+    }
+    function updateSearchResults(data) {
+    const resultsContainer = document.getElementById("search-results");
+    resultsContainer.innerHTML = '';  // Clear previous results
+
+    if (data && Object.keys(data).length > 0) {
+        Object.entries(data).forEach(([username, profilePicture]) => {
+            const resultElement = document.createElement('div');
+            resultElement.classList.add('result-item');
+            
+            // Create and add the profile picture element
+            const profilePicElement = document.createElement('img');
+            profilePicElement.src = profilePicture;
+            profilePicElement.alt = `${username}'s profile picture`;
+            profilePicElement.classList.add('profile-picture');
+            // profilePicElement.onclick = window.location = "http://192.168.0.55:5000/home"
+            // Create and add the username element
+            const usernameElement = document.createElement('span');
+            usernameElement.textContent = username;
+            usernameElement.className = "usernameSearchResults"
+            usernameElement.onclick = function() {window.location.replace("http://192.168.0.55:5000/search_profile?profile_username=" + username)}
+            // Append profile picture and username to the result element
+            resultElement.appendChild(profilePicElement);
+            resultElement.appendChild(usernameElement);
+            resultElement.onclick = function() {window.location.replace("http://192.168.0.55:5000/search_profile?profile_username=" + username)}
+            // Append result element to the results container
+            resultsContainer.appendChild(resultElement);
+        });
+    } else {
+        resultsContainer.innerHTML = '<div class="message">No results found</div>';
+    }
+        }
+</script>
+</head>
+<body>
+    <div class="navbarBodyContainer">
+        <div class="show-header"><img src="static/images/burger_sign.png"></div>
+        <div class="navbar">
+            <header>
+                <a href="/home">
+                    <img src="/static/images/logo.png" alt="Home" style="width: 120px; height: 60px;">
+                </a>
+                <nav>
+                    <ul>
+                        <li><a href="/"><img class="navbarIcon" src="/static/images/home_icon.png" alt="Home"></a>Home</li>
+                        <li><a onclick="showSearchBox()"><img class="navbarIcon" src="/static/images/search_icon.png" alt="Search"></a>Search</li>
+                        <li><a href="/explore"><img class="navbarIcon" src="/static/images/explore_icon.png" alt="Explore"></a>Explore</li>
+                        <li><a href="/explore"><img class="navbarIcon" src="/static/images/reels_icon.png" alt="Reels"></a>Reels</li>
+                        <li><a href="/explore"><img class="navbarIcon" src="/static/images/messages_icon.png" alt="Messages"></a>Messages</li>
+                        <li><a href="/explore"><img class="navbarIcon" src="/static/images/notifications_icon.png" alt="Notifications"></a>Notifications</li>
+                        <li><a href="/profile"><img class="navbarIcon" src="/static/images/create_icon.png" alt="Create"></a>Create</li>
+                        <li><a href="/profile"><img class="navbarIconProfilePic" src="/static/profile_pictures/default-no-profile-pic.jpg" alt="Profile"></a>Profile</li>
+                        <li><a href="/logout"><img class="navbarIcon" src="/static/images/logout_icon.png" alt="Logout"></a>Logout</li>
+                    </ul>
+                </nav>
+            </header>
+        </div>
+    </div>
+    <main>
+        <section class="stories">
+            <h4>Following</h4>
+            <div class="lineBreak"></div>
+            <ul>
+                <div class="storiesContainer">
+                    <div class="add_story">
+                        <label for="add_story" class="custom-image-upload">
+                            <li><a href="#"><img src="/static/profile_pictures/{{profile_picture}}" alt="Add Story"></a></li>
+                            <span class="plus-sign">+</span>
+                        </label>
+                        <div class="upload">
+                            <form class="upload-form" action="{{ url_for('vibegram_related_routes.add_story') }}" method="POST" enctype="multipart/form-data">
+                                <input type="file" name="image" id="add_story" accept="image/*" required style="display: none;">
+                                <button type="submit" style="display: none;">Upload Image</button>
+                        </div>
+                        <p class="storie-username">Add Story</p>
+                    </div>
+                    </form>
+                    {% for storie in stories %}
+                    <div class="prof_pic_storie">
+                        <li><a href="/view_stories/start_with={{storie[0]}}"><img src="/static/profile_pictures/{{storie[2]}}" alt="Story"></a></li>
+                        <p class="storie-username">{{storie[0]}}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </ul>
+        </section>
+        <section class="posts">
+            {% for image_filename in posts_images %}
+            <ul>
+                <li>
+                    <div class="prof-pic-username">
+                        <label for="image-upload" class="custom-image-upload">
+                            <a class="profile-picture" href="{{ url_for('vibegram_related_routes.home_search_bar_search_profile', profile_username=image_filename[0]) }}" style="border: none;">
+                                <img class="profile-picture" src="/static/posts/{{ image_filename[2] }}" alt="Profile Picture">
+                            </a>
+                        </label>
+                        <p class="post-username">{{ image_filename[0] }}</p>
+                    </div>
+                    <a style="width: calc(-2px + min(550px, 96vw)); height: calc(-2px + min(560px, 96vh));" href="/view_photo/username_image_name={{ image_filename[0] }},{{ image_filename[1] }}">
+                        <img class="grid-item" src="/static/posts/{{ image_filename[1] }}" alt="Post">
+                        <p>This is the caption for Post</p>
+                    </a>
+                </li>
+            </ul>
+            {% endfor %}
+        </section>
+    </main>
+    <div id="searchModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <form class="upload-form" action="{{ url_for('vibegram_related_routes.home_search_bar_search_profile', profile_username='None') }}" method="POST" enctype="multipart/form-data">
+                <div class="searchBarResultsContainer">
+                    <div class="searchBarContainer">
+                        {% if user_does_not_exist == "own_user" %}
+                        <div class="message">
+                            {{ user }} is your own username
+                        </div>
+                        {% elif user_does_not_exist %}
+                        <div class="message">
+                            {{ user }} does not exist
+                        </div>
+                        {% endif %}
+        
+                        <input autocomplete="off" oninput="auto_complete_users()" name="search_username" id="search_username" placeholder="Search username">
+                        <button type="submit" class="search-button"><img class="navbarIcon" src="/static/images/search_icon.png"></button>
+                    </div>
+                    <div id="search-results" class="search-results"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var imageUpload = document.getElementById('add_story');
+            imageUpload.addEventListener('change', function () {
+                this.form.submit();
+            });
+        });
+        function showSearchBox() {
+            var modal = document.getElementById("searchModal");
+            var span = document.getElementsByClassName("close")[0];
+            modal.style.display = "block";
+            span.onclick = function () {
+                modal.style.display = "none";
+            }
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        }
+    </script>
+</body>
+</html>
