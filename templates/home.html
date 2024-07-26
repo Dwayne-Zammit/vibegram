@@ -390,11 +390,11 @@
             const usernameElement = document.createElement('span');
             usernameElement.textContent = username;
             usernameElement.className = "usernameSearchResults"
-            usernameElement.onclick = function() {window.location.replace("https://vibegram-sable.vercel.app:5000/search_profile?profile_username=" + username)}
+            usernameElement.onclick = function() {window.location.replace("https://vibegram-sable.vercel.app/search_profile?profile_username=" + username)}
             // Append profile picture and username to the result element
             resultElement.appendChild(profilePicElement);
             resultElement.appendChild(usernameElement);
-            resultElement.onclick = function() {window.location.replace("https://vibegram-sable.vercel.app:5000/search_profile?profile_username=" + username)}
+            resultElement.onclick = function() {window.location.replace("https://vibegram-sable.vercel.app/search_profile?profile_username=" + username)}
             // Append result element to the results container
             resultsContainer.appendChild(resultElement);
         });
