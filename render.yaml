@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: my-python-app
+    name: vibegram-app
     env: python
     buildCommand: "pip install -r requirements.txt"
     startCommand: "gunicorn -w 1 -b 0.0.0.0:5000 main:app"
